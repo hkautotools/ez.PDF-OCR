@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCR Intelligent Naming Tool</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/2.1.1/tesseract.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        input[type="file"] {
+            margin-bottom: 20px;
+        }
+        #output {
+            margin-top: 20px;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>OCR Intelligent Naming Tool</h1>
+    <input type="file" id="fileInput" accept="application/pdf" multiple />
+    <button id="processBtn">Process PDFs</button>
+    <div id="output"></div>
+
+    <script>
+        document.getElementById('processBtn').onclick = async function() {
+            const files = document.getElementById('fileInput').files;
+            const output = document.getElementById('output');
+            output.innerHTML = '';
+
+            for (const file of files) {
+                // Load a PDF document
+                const pdf = await pdfjsLib.getDocument(URL.createObjectURL(file)).promise;
+                const numPages = pdf.numPages;
+                const textContent = [];
+
+                for (let pageNum = 1; pageNum <= numPages; pageNum++) {
+                    const page = await pdf.getPage(pageNum);
+                    const text = await page.getTextContent();
+                    textContent.push(text.items.map(item => item.str).join(' '));
+                }
+
+                const recognizedText = await Tesseract.recognize(file, 'eng');
+                const outputText = textContent.join('\n') + '\n\nOCR Result:\n' + recognizedText.data.text;
+                output.innerHTML += `<h2>${file.name}</h2><pre>${outputText}</pre>`;
+            }
+        };
+    </script>
+</body>
+</html>
