@@ -1,10 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta name="google-adsense-account" content="ca-pub-9508000775127889">
-    
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9508000775127889" crossorigin="anonymous"></script>
-
     <meta charset="UTF-8">
     <title>OCR 智能命名工具</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
@@ -13,35 +9,48 @@
         :root { --primary: #2563eb; --success: #059669; --danger: #ef4444; --bg: #f1f5f9; --warning: #f59e0b; --suffix: #8b5cf6; }
         body { font-family: system-ui, sans-serif; background: var(--bg); margin: 0; padding: 20px; display: flex; justify-content: center; }
         .container { display: grid; grid-template-columns: 380px 1fr; gap: 20px; width: 100%; max-width: 1600px; }
+        
+        /* 左側欄位 */
         .sidebar { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: flex; flex-direction: column; gap: 12px; overflow-y: auto; max-height: 95vh; }
         .section-box { background: #f8fafc; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0; }
         .section-title { margin: 0 0 8px 0; font-size: 13px; font-weight: bold; color: #475569; }
+        
+        /* 標籤提示 */
         .tag-row { font-size: 11px; color: #64748b; margin-top: 6px; display: flex; gap: 8px; }
         .tag-row b { color: var(--suffix); background: #f3f0ff; padding: 1px 4px; border-radius: 3px; }
+        
+        /* 清單樣式 */
         .list-container { border: 1px solid #e2e8f0; border-radius: 6px; background: #fff; max-height: 250px; overflow-y: auto; }
         .item { padding: 10px; border-bottom: 1px solid #f1f5f9; cursor: pointer; display: flex; justify-content: space-between; align-items: flex-start; font-size: 12px; }
         .item:hover { background: #f8fafc; }
         .item.active { background: #eff6ff; border-left: 4px solid var(--primary); font-weight: bold; }
+        
+        /* 範本詳情 */
         .tpl-detail { font-size: 10px; color: #94a3b8; display: block; margin-top: 2px; font-weight: normal; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 280px; }
+        
         .file-info { display: flex; flex-direction: column; gap: 3px; overflow: hidden; flex: 1; }
         .file-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 220px; }
         .ocr-hint { font-size: 11px; color: var(--success); font-family: monospace; font-weight: normal; }
         .ocr-hint.error { color: var(--danger); }
         .edit-btn { font-size: 10px; padding: 2px 5px; margin-top: 3px; border: 1px solid #cbd5e1; border-radius: 4px; background: white; width: fit-content; cursor: pointer; }
+        
+        /* 上傳區 */
         #drop-zone { border: 2px dashed #cbd5e1; padding: 20px; text-align: center; cursor: pointer; color: #64748b; font-size: 13px; border-radius: 8px; }
         #drop-zone:hover { border-color: var(--primary); background: #f0f7ff; }
+
+        /* 右側主區域 */
         .main-content { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
         .canvas-wrapper { position: relative; border: 1px solid #cbd5e1; background: #525659; overflow: auto; height: 700px; flex: 1; }
         #selector { position: absolute; border: 2px solid var(--danger); background: rgba(239, 68, 68, 0.15); pointer-events: none; z-index: 10; }
+        
+        /* 按鈕 */
         .btn { padding: 6px 12px; border-radius: 6px; cursor: pointer; border: 1px solid #cbd5e1; background: white; font-size: 12px; }
         .btn-primary { background: var(--primary); color: white; border: none; }
         .btn-success { background: var(--success); color: white; border: none; width: 100%; padding: 12px; font-weight: bold; margin-top: 10px; font-size: 14px; }
         .btn-danger { background: #fee2e2; color: var(--danger); border: 1px solid #fecaca; width: 100%; padding: 8px; margin-top: 5px; }
+        
         @keyframes spin { 100% { transform: rotate(360deg); } }
         .spin { display: inline-block; animation: spin 1s linear infinite; }
-        
-        /* 廣告位樣式 */
-        .ad-container { margin-top: 15px; min-height: 100px; background: #f8fafc; border: 1px dashed #e2e8f0; display: flex; align-items: center; justify-content: center; }
     </style>
 </head>
 <body>
@@ -51,8 +60,8 @@
         <h3>📄 OCR 智能命名工具</h3>
         
         <div class="section-box" style="border-left: 4px solid var(--warning);">
-            <h4 class="section-title">🔍 過濾規則 (Regex) - RO#:[A-Z]{3}\d{4}R\d{4} </h4>
-            <input type="text" id="regex-pattern" placeholder="例如: [A-Z]{3}\d{4}R\d{4}" style="width:100%; box-sizing:border-box; padding:5px;">
+            <h4 class="section-title">🔍 過濾規則 (Regex)</h4>
+            <input type="text" id="regex-pattern" placeholder="例如: [A-Z]{2}\d{8}" style="width:100%; box-sizing:border-box; padding:5px;">
         </div>
 
         <div class="section-box" style="border-left: 4px solid var(--suffix);">
